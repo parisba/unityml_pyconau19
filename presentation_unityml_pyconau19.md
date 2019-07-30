@@ -1,7 +1,6 @@
 footer: @parisba / #pyconau
 theme: Business Class
 
-
 # Building, designing, teaching and training simulation environments for Machine Learning
 
 ## Paris Buttfield-Addison
@@ -10,14 +9,82 @@ theme: Business Class
 
 # Paris Buttfield-Addison
 
-- game developer
+- professional game developer
+- enjoyer of machine learning
+- (enthusiastic) amateur Pythonista
 - PhD in Computer Science
-- machine learning enthusiast
+- whippet enthusiast
 
 ![right 100%](presentation_images/parisba.png)
 
 ---
 
+![fit](presentation_images/books.png)
+
+^ I write a lot of books.
+
+---
+
+![fill fit](presentation_images/nitw.jpg)
+
+^ And we build a lot of video games.
+
+---
+
+# This topic is Python-adjacent
+
+- Unity is C#
+- Unity does the simulation-y, scene-y stuff
+- Python does the ML heavy lifting
+
+^ I love Python, but the primary work in using the technology I'm talking about today is not Python.
+
+---
+
+# The Pieces
+
+- a game engine (Unity)
+- a machine learning framework (TensorFlow)
+- something to glue them together (Unity ML-Agents)
+
+---
+
+^ This is Unity. Unity is some ridiculously high percentage of the games industry. I'm not here to debate the relative merits of Unity. It just happens to be the one we use a lot.
+
+---
+
+> A game engine is controlled, self-contained spatial, physical environment that can _[closely]_ replicate _[enough of]_ the real world _[to be useful]_.
+
+^ A game engine is basically enough of the real world that you can simulate the real world to a sufficient level to play with all sorts of things. This can be called a an AI biodome. A synthetic environment that’s a replica of the real world, combined with Machine Learning infrastructure. 
+
+---
+
+![fit](presentation_images/ml1.png)
+![fit](presentation_images/ml2.png)
+![fit](presentation_images/ml3.png)
+
+^ This is connected to the explosion of very visual AI problem solving that’s popped up lately, from visual, like the computer player doom, to physics-based, like the critters learning to walk, to cognitive, like AlphaGo’s DeepMind. Lots of different environments doing all sorts of reinforcement learning lately.
+
+^ In a game engine, you can build a complex environment that reflects something you might be working with, or interested in in the real world, in a really trivial way. You can incorporate real-time observations that come from positions and metrics of objects in the scene, but because it’s a game engine you can also use observations from in-engine cameras of all kinds, and perform your learning and training using those inputs, combined with sensors.
+
+---
+
+![fit](presentation_images/mlagents.png)
+
+---
+
+![fit](presentation_images/mlpaper.png)
+
+---
+
+<!-- Learn how:
+ * straightforward a game engine can be 
+ * how to define and lay out your environment for ML problem solving 
+ * how to choose and apply different ML techniques, algorithms, and learning approaches, such as (deep) reinforcement learning, imitation learning, and curriculum learning 
+* how generic but powerful Python-powered algorithms, such as PPO (Proximal Policy Optimization) make this new-wave of ML possible * how to tune simulations and pick the right actions, observations, and rewards to optimise your agents 
+* how to design for emergent problem solving by your agents, where you’re not quite sure what the optimal solution looks like -->
+
+---
 <!-- https://2019.pycon-au.org/talks/building-designing-teaching-and-training-simulation-environments-for-machine-learning -->
 
 <!-- Imagine you’re building a fancy robot-driven warehouse. Your pick, place, and packing robots need to get around quickly, find the right item and put it to the right place without colliding with each other, shelves, or people. But you don’t have any robots yet, and you need to start. Try simulations!
@@ -28,12 +95,6 @@ A game engine is controlled, self-contained spatial, physical environment that (
 
 This session will explore how you can use game engines to explore and solve problems——such as the aforementioned robot-driven warehouse——in a simulated environment, without building costly and complicated real-world rigs.
 
-Learn how:
- * straightforward a game engine can be 
- * how to define and lay out your environment for ML problem solving 
- * how to choose and apply different ML techniques, algorithms, and learning approaches, such as (deep) reinforcement learning, imitation learning, and curriculum learning 
-* how generic but powerful Python-powered algorithms, such as PPO (Proximal Policy Optimization) make this new-wave of ML possible * how to tune simulations and pick the right actions, observations, and rewards to optimise your agents 
-* how to design for emergent problem solving by your agents, where you’re not quite sure what the optimal solution looks like
 
 Using the popular, powerful (Mono/C#-based) Unity game engine, and its integration with Python, primarily for TensorFlow, as a case study, this session will explore simulation-driven machine learning.
 
@@ -41,20 +102,29 @@ Game engines are a great place to explore ML and AI. They’re wonderful constra
 
 ---
 
-![fit](presentation_images/mlagents.png)
+[.build-lists: true]
+
+# What you need (Part 1)
+
+1. **Download and install Unity:**
+    - https://unity3d.com/get-unity/download 
+2. **Build a Simulation:**
+    - we're going to build a self-driving car
+3. **Play it like a game:**
+    - drive that car!
 
 ---
 
 [.build-lists: true]
 
-# What you need
+# What you need (Part 2)
 
-1. Create a Python 3.6 environment and activate:
+1. **Create a Python 3.6 environment and activate:**
    - `conda create -n UnityMLEnv python=3.6`
    - `conda activate UnityMLEnv`
-2. Install TensorFlow 1.7.1:
+2. **Install TensorFlow 1.7.1:**
    - `pip install tensorflow==1.7.1`
-3. Install ML-Agents:
+3. **Install ML-Agents:**
    - `pip install mlagents`
 
 ^ After you're got Unity, what do you need?
@@ -66,17 +136,79 @@ Game engines are a great place to explore ML and AI. They’re wonderful constra
 ---
 
 # Brain
+# Academy
+# Agent
+
+^ There are three key components…
+^ Brain, Academy, and Agent
+^ …Let’s look at these one by one.
 
 ---
 
 # Brain
+
+- Holds logic for the Agent’s decision making
+- Determines which action(s) the Agent should take at each instance
+- Receives observations from the Agent
+- Receives rewards from the Agent
+- Returns actions to the Agent
+- Can be controlled by a human, a training process, or an inference process
+
+^ The Brain is the component which encapsulates the logic for making decisions (for the Agent(s)). 
+
+---
+
 # Academy
+
+- Orchestrates the observations and decision making process
+- Sets environment-wide parameters, like speed and rendering quality
+- Talks to the external communicator
+- Make sure agent(s) and brain(s) are in sync
+- Coordinates everything
+
+^ The Academy is the component which orchestrates the observation and decision making process.  Controls the training environment and simulation.
+
+---
+
+# Agent
+
+- Attached to a Unity Game Object
+- Generates observations
+- Performs actions (that it’s told to do by a brain)
+- Assigns rewards 
+- Linked to one Brain
+
+^ The Agent is the component which performs some sort of action.
 
 ---
 
 # Brain
 # Academy
 # Agent
+
+^ So that’s Academies, Brains, and Agents. In a little more detail…
+
+---
+
+TODO: Image
+
+^ A typical setup might look a bit like this.
+
+---
+
+TODO: Image
+
+
+^ But in many cases it’s a one-to-one-to-one mapping.
+
+---
+
+# Training and Learning Methods
+
+- reinforcement learning
+- imitation learning
+- neuroevolution
+
 
 ---
 
